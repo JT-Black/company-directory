@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Company Directory</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="resources/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- App Container -->
+    <div class="container">
+        <h3 class="page-title text-center">
+            <b>Company Directory</b>
+        </h3>
+        <div class="col-md-12">
+            <div class="page-people-directory">
+                <div class="row">
+                    <div class="col-md-3">
+                        <!-- Navigation -->
+                        <ul class="nav nav-pills nav-stacked nav-contacts" id="navigation">
+                            <li class="nav-empl"><a href="/"><i class="bi bi-people-fill"></i> Employees</a></li>
+                            <li class="nav-depa"><a href="/departments"><i class="bi bi-x-diamond-fill"></i> Departments</a></li>
+                            <li class="nav-loca"><a href="/locations"><i class="bi bi-geo-alt-fill"></i> Locations</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-9">
+                        <!-- Search -->
+                        <form action="/employees" method="get" id="search">
+                            <div class="form-group mb">
+                                <input autocomplete="off" name="search" class="form-control" placeholder="Search for..." type="search">
+                            </div>
+                        </form>
+                        <!-- Page container -->
+                        <div id="content"></div>
+                    </div>
+                </div>
+            </div><!-- /.page-people-directory -->
+        </div>
+    </div><!-- /.container -->
+
+    <div class="modal fade " tabindex="-1" role="dialog" id="message-modal">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-body">
+                <div id="error-messages" class="alert alert-danger">WARNING</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+              </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Employees Templates -->
+    <script id="employees-template" type="text/x-handlebars-template">
+        <div class="row">
+            <div class="col-md-6"><h3>Employees</h3></div>
+            <div class="col-md-6">
+                <button class="btn btn-primary btn-raised btn-add-new-contact" data-target="#modal-add-employee" data-toggle="modal" type="button"><i class="bi bi-person-plus-fill"></i> Add New Employee</button>
+            </div>
+        </div>
+
+        {{> employeesList }}
+
+
+        <!-- Modal Add New Employee -->
+        <div aria-hidden="true" class="modal modal-pull-right" data-easein="fadeInRight" data-easeout="fadeOutRight" id="modal-add-employee" role="dialog" style="display: none;" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeOutRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Add New Employee</h4>
+                    </div>
+                    <form action="/employees" class=" tabular-form margin-top-10" method="post">
+                        <div class="modal-body">
+                                    <div class="form-errors"></div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">First Name</label>
+                                        <input class="form-control" id="firstName" name="firstName" placeholder="First Name" type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">Last Name</label>
+                                        <input class="form-control" id="lastName" name="lastName" placeholder="Last Name" type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="department">Department</label>
+                                        <select class="form-control" name="departmentID" id="departmentID">
+                                            {{#each departments}}
+                                            <option value="{{id}}">{{name}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="location">Job Title</label>
+                                        <input class="form-control" id="jobTitle" name="jobTitle" placeholder="Job Title" type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="email">Email</label>
+                                        <input class="form-control" id="email" name="email" placeholder="Email" type="text">
+                                    </div>
+                        </div><!-- /.modal-body -->
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary btn-flat" data-dismiss="modal" type="button">Cancel</button>
+                            <button class="btn btn-primary btn-flat" type="submit">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div><!-- /.modal -->
+        <!-- Modal Edit Employee -->
+        <div aria-hidden="true" class="modal modal-pull-right" data-easein="fadeInRight" data-easeout="fadeOutRight" id="modal-edit-employee" role="dialog" style="display: none;" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeOutRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Edit Employee</h4>
+                    </div>
+                    <form action="/employees" class=" tabular-form margin-top-10" method="post">
+                        <input type="hidden" name="_method" value="put">
+                        <div class="modal-body">
+                            <div class="form-errors"></div>
+                            <div class="form-group">
+                                <label class="control-label" for="name">First Name</label>
+                                <input class="form-control" id="firstName" name="firstName" placeholder="First Name" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="name">Last Name</label>
+                                <input class="form-control" id="lastName" name="lastName" placeholder="Last Name" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="department">Department</label>
+                                <select class="form-control" name="departmentID" id="departmentID">
+                                    {{#each departments}}
+                                    <option value="{{id}}">{{name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="location">Job Title</label>
+                                <input class="form-control" id="jobTitle" name="jobTitle" placeholder="Job Title" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="email">Email</label>
+                                <input class="form-control" id="email" name="email" placeholder="Email" type="text">
+                            </div>
+                        </div><!-- /.modal-body -->
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary btn-flat" data-dismiss="modal" type="button">Cancel</button>
+                            <button class="btn btn-primary btn-flat" type="submit">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div><!-- /.modal -->
+    </script>
+    <!-- </template> -->
+
+    <script id="employees-list-template" type="text/x-handlebars-template">
+        <div class="list-group contact-group">
+            {{#each employees}}
+                <div class="list-group-item">
+                    <div class="media">
+                        <div class="pull-left">
+                            <svg data-jdenticon-value="{{email}}" height="80" width="80"></svg>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                {{firstName}} {{lastName}}
+                                {{#if jobTitle}}
+                                    <small>{{jobTitle}}</small>
+                                {{/if}}
+                            </h4>
+                            <div class="media-content">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div><i class="bi bi-geo-alt-fill"></i> {{location}}</div>
+                                        <div><i class="bi bi-x-diamond-fill"></i> {{department}}</div>
+                                        <div><i class="bi bi-envelope-fill"></i> {{email}}</div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div><a data-url="/employees/{{id}}" data-modal="#modal-edit-employee" data-item="{{json this}}" class="edit"><i class="bi bi-pencil-square"></i> Edit Employee</a></div>
+
+                                        <div><a href="/employees/{{id}}" class="delete"><i class="bi bi-trash-fill"></i> Delete Employee</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="list-group-item text-center">
+                    <i class="bi bi-exclamation-circle" style="font-size: 3rem;"></i>
+                     <div><h3>No Results</h3></div>
+                </div>
+            {{/each}}
+        </div>
+    </script>
+
+    <!-- Departments Template -->
+    <script id="departments-template" type="text/x-handlebars-template">
+        <div class="row">
+            <div class="col-md-6"><h3>Departments</h3></div>
+            <div class="col-md-6">
+                <button class="btn btn-primary btn-raised btn-add-new-contact" data-target="#modal-add-department" data-toggle="modal" type="button"><i class="bi bi-person-plus-fill"></i> Add New Department</button>
+            </div>
+        </div>
+        <div class="list-group contact-group">
+            {{#each departments}}
+                <div class="list-group-item">
+                    <div class="media">
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                {{name}}
+                            </h4>
+                            <div class="media-content">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <a data-url="/departments/{{id}}" data-modal="#modal-edit-department" data-item="{{json this}}" class="edit"><i class="bi bi-pencil-square"></i> Edit Department</a>
+                                        <div></div>
+                                        <a href="/departments/{{id}}" class="delete"><i class="bi bi-trash-fill"></i> Delete Department</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+
+        <!-- Modal Add New Department -->
+        <div aria-hidden="true" class="modal modal-pull-right" data-easein="fadeInRight" data-easeout="fadeOutRight" id="modal-add-department" role="dialog" style="display: none;" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeOutRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Add New Department</h4>
+                    </div>
+                    <form action="/departments" method="post" class="tabular-form margin-top-10">
+
+                        <div class="modal-body">
+                            <div class="form-errors"></div>
+                            <div class="form-group">
+                                <label class="control-label" for="name">Department Name</label>
+                                <input class="form-control" id="name" name="name" placeholder="Department Name" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="locationID">Location</label>
+                                <select class="form-control" name="locationID" id="locationID">
+                                    {{#each locations}}
+                                    <option value="{{id}}">{{name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div><!-- /.modal-body -->
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary btn-flat" data-dismiss="modal" type="button">Cancel</button>
+                            <button class="btn btn-primary btn-flat" type="submit">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div><!-- /.modal -->
+        <!-- Modal Edit Department -->
+        <div aria-hidden="true" class="modal modal-pull-right" data-easein="fadeInRight" data-easeout="fadeOutRight" id="modal-edit-department" role="dialog" style="display: none;" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeOutRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Edit Department</h4>
+                    </div>
+
+
+
+
+
+
+                        <form action="/departments" method="post" class="tabular-form margin-top-10 ">
+                            <input type="hidden" name="_method" value="put">
+                            <div class="modal-body">
+                                <div class="form-errors"></div>
+                                <div class="form-group">
+                                    <label class="control-label" for="name">Department Name</label>
+                                    <input class="form-control" id="name" name="name" placeholder="Department Name" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="locationID">Location</label>
+                                    <select class="form-control" name="locationID" id="locationID">
+                                        {{#each locations}}
+                                        <option value="{{id}}">{{name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary btn-flat" data-dismiss="modal" type="button">Cancel</button>
+                                <button class="btn btn-primary btn-flat" type="submit">Save Changes</button>
+                            </div>
+
+                        </form>
+
+
+
+                    </div><!-- /.modal-close -->
+                </div>
+            </div>
+        </div><!-- /.modal -->
+    </script>
+
+    <!-- Locations Template -->
+    <script id="locations-template" type="text/x-handlebars-template">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>
+                    Locations
+                </h3>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary btn-raised btn-add-new-contact" data-target="#modal-add-location" data-toggle="modal" type="button"><i class="bi bi-person-plus-fill"></i> Add New Location</button>
+            </div>
+        </div>
+        <div class="list-group contact-group">
+            {{#each this}}
+                <div class="list-group-item">
+                    <div class="media">
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                {{name}}
+                            </h4>
+                            <div class="media-content">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a data-url="/locations/{{id}}" data-modal="#modal-edit-location" data-item="{{json this}}" class="edit"><i class="bi bi-pencil-square"></i> Edit Location</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="/locations/{{id}}" class="delete"><i class="bi bi-trash-fill"></i> Delete Location</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+
+        <!-- Modal Add New Location -->
+        <div aria-hidden="true" class="modal modal-pull-right" data-easein="fadeInRight" data-easeout="fadeOutRight" id="modal-add-location" role="dialog" style="display: none;" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeOutRight">
+                    <div class="modal-content animated fadeOutRight">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Add New Location</h4>
+                        </div>
+                        <form action="/locations" method="post" class="tabular-form margin-top-10">
+
+                            <div class="modal-body">
+                                <div class="form-errors"></div>
+                                <div class="form-group">
+                                    <label class="control-label" for="name">Location Name</label>
+                                    <input class="form-control" id="name" name="name" placeholder="Name" type="text">
+                                </div>
+
+                            </div><!-- /.modal-body -->
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary btn-flat" data-dismiss="modal" type="button">Cancel</button>
+                                <button class="btn btn-primary btn-flat" type="submit">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal -->
+
+
+
+        <!-- Modal Edit Location -->
+        <div aria-hidden="true" class="modal modal-pull-right" data-easein="fadeInRight" data-easeout="fadeOutRight" id="modal-edit-location" role="dialog" style="display: none;" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeOutRight">
+                    <div class="modal-body">
+                        <div class="row modal-close">
+                            <div class="col-md-12 padding-bottom-8 padding-top-8 bg-silver">
+                                <h4 class="pull-left">
+                                    <b> Edit Location</b>
+                                </h4>
+                                <ul class="list-unstyled list-inline text-right">
+                                    <li class="close-right-modal">
+                                        <span class="fa fa-times fa-2x" data-dismiss="modal"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+
+                                <form action="/locations" method="post" class="tabular-form margin-top-10">
+                                    <input type="hidden" name="_method" value="put">
+                                    <div class="form-errors"></div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">Location Name</label>
+
+                                        <input class="form-control" id="name" name="name" placeholder="Name" type="text">
+
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="btn btn-secondary btn-flat" data-dismiss="modal" type="button">Cancel</button> <button class="btn btn-primary btn-flat" type="submit">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div><!-- /.row -->
+                    </div><!-- /.modal-close -->
+                </div>
+            </div>
+        </div><!-- /.modal -->
+    </script>
+
+    <!-- Error Template -->
+    <script id="error-template" type="text/x-handlebars-template">
+        <div class="alert alert-danger">
+            <strong>{{message}}</strong>
+            <div>
+                {{#each errors}}
+                    {{#each this}}
+                        <div>{{this}}</div>
+                    {{/each}}
+                {{/each}}
+            </div>
+        </div>
+    </script>
+
+    <script id="search-template" type="text/x-handlebars-template">
+        <div class="row">
+            <div class="col-xs-8"><h3>Search Results</h3></div>
+            <div class="col-xs-4 text-right">
+                <a href="#" id="clear-search">Clear Search</a>
+            </div>
+        </div>
+        {{> employeesList }}
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/jdenticon@3.1.1/dist/jdenticon.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="node_modules/vanilla-router/dist/vanilla-router.min.js"></script>
+    <script src="node_modules/handlebars/dist/handlebars.js"></script>
+    <script src="node_modules/populate.js/populate.js"></script>
+    <script src="resources/js/cd.js"></script>
+</body>
+</html>

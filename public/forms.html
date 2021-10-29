@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <form action="/departments" method="post">
+        <h3>Create Department</h3>
+        <div>
+            <input type="text" name="name" placeholder="Enter Name">
+        </div>
+         <div>
+            <input type="text" name="locationID" placeholder="enter Location ID">
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+    <br>
+    <form action="/employees" method="post">
+        <h3>Create Employee</h3>
+        <div>
+            <input type="text" name="firstName" placeholder="Enter First Name">
+        </div>
+        <div>
+            <input type="text" name="lastName" placeholder="Enter Last Name">
+        </div>
+        <div>
+            <input type="text" name="jobTitle" placeholder="Enter Job Title">
+        </div>
+        <div>
+            <input type="text" name="email" placeholder="Enter Email">
+        </div>
+        <div>
+            <input type="text" name="departmentID" placeholder="Enter Department ID">
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+
+    </form>
+    <br>
+    <form action="/locations" method="post">
+        <h3>Create Location</h3>
+        <div>
+            <input type="text" name="name" placeholder="Enter Location Name">
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <form action="/departments/2" method="post">
+        <h3>Update Department</h3>
+        <div>
+            <input type="hidden" name="_method" value="PUT" />
+            <input type="text" name="name" placeholder="Enter Name">
+        </div>
+         <div>
+            <input type="text" name="locationID" placeholder="enter Location ID">
+        </div>
+        <br>
+        <button type="submit">Update</button>
+    </form>
+    <form action="/employees/1" method="post">
+        <h3>Update Employee</h3>
+        <div>
+            <input type="hidden" name="_method" value="PUT" />
+            <input type="text" name="firstName" placeholder="Enter First Name">
+        </div>
+        <div>
+            <input type="text" name="lastName" placeholder="Enter Last Name">
+        </div>
+        <div>
+            <input type="text" name="jobTitle" placeholder="Enter Job Title">
+        </div>
+        <div>
+            <input type="text" name="email" placeholder="Enter Email">
+        </div>
+        <div>
+            <input type="text" name="departmentID" placeholder="Enter Department ID">
+        </div>
+        <br>
+        <button type="submit">Update</button>
+    </form>
+    <form action="/locations/1" method="post">
+        <h3>Update Location</h3>
+        <div>
+            <input type="hidden" name="_method" value="PUT" />
+            <input type="text" name="name" placeholder="Enter Location Name">
+        </div>
+        <br>
+        <button type="submit">Update</button>
+    </form>
+    <form action="/departments/1" method="post">
+        <h3>Delete Department</h3>
+        <input type="hidden" name="_method" value="DELETE" />
+        <br>
+        <button type="submit">Delete</button>
+    </form>
+    <form action="/employees/1" method="post">
+        <h3>Delete Employee</h3>
+        <input type="hidden" name="_method" value="DELETE" />
+        <br>
+        <button type="submit">Delete</button>
+    </form>
+    <form action="/locations/7" method="post">
+        <h3>Delete Location</h3>
+        <input type="hidden" name="_method" value="DELETE" />
+        <br>
+        <button type="submit">Delete</button>
+    </form>
+</body>
+</html>
