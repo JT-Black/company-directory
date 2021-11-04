@@ -43,6 +43,14 @@ class EmployeesController
         return response()->json($employees);
     }
 
+    public function view($id){
+        $db = container("db");
+        $stmt = $db->prepare('SELECT * FROM personnel WHERE id = :id');
+        $stmt->execute(["id" => $id]);
+        $employee = $stmt->fetch();
+        return response()->json($employee);
+    }
+
     public function create(){
 
         $validator = container("validator");
@@ -91,6 +99,7 @@ class EmployeesController
         $stmt = $db->prepare('UPDATE personnel SET firstName = :firstName, lastName = :lastName, email = :email, departmentID = :departmentID, jobTitle = :jobTitle WHERE id = :id');
         $stmt->execute($values + ["id" => $id]);
     }
+
 
     public function delete($id){
         $db = container("db");

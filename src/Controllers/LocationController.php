@@ -19,6 +19,14 @@ class LocationController
         return response()->json($locations);
     }
 
+    public function view($id){
+        $db = container("db");
+        $stmt = $db->prepare('SELECT * FROM location WHERE id = :id');
+        $stmt->execute(["id" => $id]);
+        $location = $stmt->fetch();
+        return response()->json($location);
+    }
+
     public function create(){
         $validator = container("validator");
         $validation = $validator->validate($_POST + $_FILES, [
@@ -58,10 +66,13 @@ class LocationController
 
     public function delete($id){
         $db = container("db");
-        $query = 'SELECT * FROM department WHERE locationID = :id';
+        $query = 'SELECT count(id) as count FROM department WHERE locationID = :id';
+
         $stmt = $db->prepare($query);
         $stmt->execute(["id" => $id]);
-        if (! empty($stmt->fetchAll())){
+        $result = $stmt->fetch();
+
+        if ((int) $result["count"] !== 0){
 
             throw new Exception("Location cannot be deleted!");
         }

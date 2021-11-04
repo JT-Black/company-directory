@@ -4,41 +4,64 @@
     <meta charset="utf-8">
     <title>Company Directory</title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link rel="icon" href="resources/img/favicon.png">
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="resources/css/styles.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img src="resources/img/logo.png" alt="Megasoft" height="25">
+            </a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav " id="navigation">
+                <li class="nav-empl"><a href="/"><i class="bi bi-people-fill"></i> Employees</a></li>
+                <li class="nav-depa"><a href="/departments"><i class="bi bi-x-diamond-fill"></i> Departments</a></li>
+                <li class="nav-loca"><a href="/locations"><i class="bi bi-geo-alt-fill"></i> Locations</a></li>
+            </ul>
+
+
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
     <!-- App Container -->
-    <div class="container">
+    <div class="app-container container">
         <h3 class="page-title text-center">
             <b>Company Directory</b>
         </h3>
         <div class="col-md-12">
             <div class="page-people-directory">
-                <div class="row">
-                    <div class="col-md-3">
-                        <!-- Navigation -->
-                        <ul class="nav nav-pills nav-stacked nav-contacts" id="navigation">
-                            <li class="nav-empl"><a href="/"><i class="bi bi-people-fill"></i> Employees</a></li>
-                            <li class="nav-depa"><a href="/departments"><i class="bi bi-x-diamond-fill"></i> Departments</a></li>
-                            <li class="nav-loca"><a href="/locations"><i class="bi bi-geo-alt-fill"></i> Locations</a></li>
-                        </ul>
+                <!-- Search -->
+                <form action="/employees" method="get" id="search">
+                    <div class="form-group mb">
+                        <input autocomplete="off" name="search" class="form-control" placeholder="Search for..." type="search">
                     </div>
-                    <div class="col-md-9">
-                        <!-- Search -->
-                        <form action="/employees" method="get" id="search">
-                            <div class="form-group mb">
-                                <input autocomplete="off" name="search" class="form-control" placeholder="Search for..." type="search">
-                            </div>
-                        </form>
-                        <!-- Page container -->
-                        <div id="content"></div>
-                    </div>
-                </div>
+                </form>
+                <!-- Page container -->
+                <div id="content"></div>
+
             </div><!-- /.page-people-directory -->
         </div>
+        <!-- Add Button -->
+        <div class="add-new-button">
+            <a href="#" data-toggle="modal"><i class="bi bi-plus-circle-fill" ></i> </a>
+        </div>
     </div><!-- /.container -->
+
+
 
     <div class="modal fade " tabindex="-1" role="dialog" id="message-modal">
         <div class="modal-dialog modal-sm">
@@ -56,12 +79,7 @@
 
     <!-- Employees Templates -->
     <script id="employees-template" type="text/x-handlebars-template">
-        <div class="row">
-            <div class="col-md-6"><h3>Employees</h3></div>
-            <div class="col-md-6">
-                <button class="btn btn-primary btn-raised btn-add-new-contact" data-target="#modal-add-employee" data-toggle="modal" type="button"><i class="bi bi-person-plus-fill"></i> Add New Employee</button>
-            </div>
-        </div>
+
 
         {{> employeesList }}
 
@@ -182,7 +200,7 @@
                                         <div><i class="bi bi-envelope-fill"></i> {{email}}</div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <div><a data-url="/employees/{{id}}" data-modal="#modal-edit-employee" data-item="{{json this}}" class="edit"><i class="bi bi-pencil-square"></i> Edit Employee</a></div>
+                                        <div><a href="/employees/{{id}}" data-modal="#modal-edit-employee" class="edit"><i class="bi bi-pencil-square"></i> Edit Employee</a></div>
 
                                         <div><a href="/employees/{{id}}" class="delete"><i class="bi bi-trash-fill"></i> Delete Employee</a></div>
                                     </div>
@@ -202,12 +220,7 @@
 
     <!-- Departments Template -->
     <script id="departments-template" type="text/x-handlebars-template">
-        <div class="row">
-            <div class="col-md-6"><h3>Departments</h3></div>
-            <div class="col-md-6">
-                <button class="btn btn-primary btn-raised btn-add-new-contact" data-target="#modal-add-department" data-toggle="modal" type="button"><i class="bi bi-person-plus-fill"></i> Add New Department</button>
-            </div>
-        </div>
+
         <div class="list-group contact-group">
             {{#each departments}}
                 <div class="list-group-item">
@@ -219,7 +232,7 @@
                             <div class="media-content">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <a data-url="/departments/{{id}}" data-modal="#modal-edit-department" data-item="{{json this}}" class="edit"><i class="bi bi-pencil-square"></i> Edit Department</a>
+                                        <a href="/departments/{{id}}" data-modal="#modal-edit-department" class="edit"><i class="bi bi-pencil-square"></i> Edit Department</a>
                                         <div></div>
                                         <a href="/departments/{{id}}" class="delete"><i class="bi bi-trash-fill"></i> Delete Department</a>
                                     </div>
@@ -313,16 +326,7 @@
 
     <!-- Locations Template -->
     <script id="locations-template" type="text/x-handlebars-template">
-        <div class="row">
-            <div class="col-md-6">
-                <h3>
-                    Locations
-                </h3>
-            </div>
-            <div class="col-md-6">
-                <button class="btn btn-primary btn-raised btn-add-new-contact" data-target="#modal-add-location" data-toggle="modal" type="button"><i class="bi bi-person-plus-fill"></i> Add New Location</button>
-            </div>
-        </div>
+
         <div class="list-group contact-group">
             {{#each this}}
                 <div class="list-group-item">
@@ -334,7 +338,7 @@
                             <div class="media-content">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a data-url="/locations/{{id}}" data-modal="#modal-edit-location" data-item="{{json this}}" class="edit"><i class="bi bi-pencil-square"></i> Edit Location</a>
+                                        <a href="/locations/{{id}}" data-modal="#modal-edit-location" class="edit"><i class="bi bi-pencil-square"></i> Edit Location</a>
                                     </div>
                                     <div class="col-md-6">
                                         <a href="/locations/{{id}}" class="delete"><i class="bi bi-trash-fill"></i> Delete Location</a>

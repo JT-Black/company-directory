@@ -7,16 +7,19 @@ use Pecee\SimpleRouter\SimpleRouter;
 
 SimpleRouter::group(['exceptionHandler' => ErrorHandler::class], function() {
     SimpleRouter::get('/employees', [EmployeesController::class, 'index']);
+    SimpleRouter::get('/employees/{id}', [EmployeesController::class, 'view']);
     SimpleRouter::put('/employees/{id}', [EmployeesController::class, 'update']);
     SimpleRouter::post('/employees', [EmployeesController::class, 'create']);
     SimpleRouter::delete('/employees/{id}', [EmployeesController::class, 'delete']);
 
     SimpleRouter::get('/departments', [DepartmentController::class, 'index']);
+    SimpleRouter::get('/departments/{id}', [DepartmentController::class, 'view']);
     SimpleRouter::put('/departments/{id}', [DepartmentController::class, 'update']);
     SimpleRouter::post('/departments', [DepartmentController::class, 'create']);
     SimpleRouter::delete('/departments/{id}', [DepartmentController::class, 'delete']);
 
     SimpleRouter::get('/locations', [LocationController::class, 'index']);
+    SimpleRouter::get('/locations/{id}', [LocationController::class, 'view']);
     SimpleRouter::put('/locations/{id}', [LocationController::class, 'update']);
     SimpleRouter::post('/locations', [LocationController::class, 'create']);
     SimpleRouter::delete('/locations/{id}', [LocationController::class, 'delete']);

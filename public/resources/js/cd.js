@@ -11,6 +11,7 @@ var router = new Router({
 router.add('', function () {
     $("#navigation li.active").removeClass("active");
     $(".nav-empl").addClass("active");
+    $(".add-new-button a").attr("data-target","#modal-add-employee");
 
     $.when($.ajax("/employees"),$.ajax("/departments"))
     .done(function( employees, departments ) {
@@ -28,6 +29,7 @@ router.add('', function () {
 router.add('/departments', function () {
     $("#navigation li.active").removeClass("active");
     $(".nav-depa").addClass("active");
+    $(".add-new-button a").attr("data-target","#modal-add-department");
     $.when($.ajax("/departments"),$.ajax("/locations"))
     .done(function( departments, locations ) {
         let data = {
@@ -43,6 +45,7 @@ router.add('/departments', function () {
 router.add('/locations', function () {
     $("#navigation li.active").removeClass("active");
     $(".nav-loca").addClass("active");
+    $(".add-new-button a").attr("data-target","#modal-add-location");
     $.ajax({
         method: "GET",
         url: "/locations",
@@ -63,11 +66,16 @@ $( "#navigation" ).on( "click", "a", function( event ) {
     event.preventDefault();
     router.navigateTo($( this ).attr("href"));
     $("#search [name='search']").val("");
+    $("#navbar-collapse").collapse("hide");
 
 });
 
 $("body").on("click",".delete", function( event ) {
     event.preventDefault();
+
+    if (!window.confirm("Are you sure you want to delete?")) {
+        return;
+    }
 
     $.ajax({
         type:"post",
@@ -93,10 +101,12 @@ $("body").on("click", ".edit", function( event ){
     let link = $(this);
     let modal = $(link.data("modal"));
     let form = modal.find("form");
-    form.attr('action', link.data("url"));
-    populate(form.get(0), link.data("item"));
+    form.attr('action', link.attr("href"));
 
-    modal.modal();
+    $.ajax(link.attr("href")).done(function(response){
+        populate(form.get(0), response);
+        modal.modal();
+    });
 });
 
 $("#content").on("submit","form", function( event ) {
